@@ -80,7 +80,7 @@ def operator(operator):
 
 
 def calculate(var1, operation):
-    var2 = int(entry_var.get())
+    var2 = float(entry_var.get())
 
     # do nothing if no operation is set
     try:
