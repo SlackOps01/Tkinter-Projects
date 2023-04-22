@@ -1,12 +1,15 @@
 # run export LC_ALL=C to avoid locale errors on linux
 import tkinter as tk
 import ttkbootstrap as ttk
+from PIL import ImageTk, Image
 import pyperclip
 import webbrowser
 
 url = 'https://github.com/SlackOps01'
 # Setup
 window = ttk.Window(themename='vapor')
+photo = ImageTk.PhotoImage(Image.open('calc.png'))
+window.iconphoto(False, photo)
 window.title('app')
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
