@@ -26,6 +26,8 @@ def updateLabel(val):
     elif val == '\r':
         calculate(var1, operation)
         pass
+    elif val == '.':
+        insertDecimal()
     try:
         val = int(val)
         if entry_var.get() == '0':
