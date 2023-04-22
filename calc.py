@@ -206,6 +206,8 @@ all_clear_button.grid(row=1, column=4, padx=7.5, sticky='nsew', pady=5, rowspan=
 
 # Security event
 window.bind('<Escape>', lambda event: window.quit())
+
+# Binding other Keypresses for similar functionality with the window's buttons
 window.bind('<KeyPress>', lambda event: updateLabel(event.char))
 window.bind('<BackSpace>', lambda event: backSpace())
 # Run
