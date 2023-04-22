@@ -13,7 +13,7 @@ window.iconphoto(False, photo)
 window.title('app')
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
-window.geometry('250x350+1366+0')
+window.geometry('250x370+1366+0')
 window.resizable(False, False)
 
 operators = ['+', '*', "/", "%", '-']
@@ -57,6 +57,7 @@ def insertDecimal():
 
 def clearEntry():
     entry_var.set(0)
+    state_var.set(f"{var1}{operation}{var2}")
 
 
 def clearAll():
@@ -65,6 +66,8 @@ def clearAll():
     entry_var.set(0)
     var1 = 0
     var2 = 0
+    state_var.set(f"{var1}{operation}{var2}")
+
 
 
 var1=0
@@ -76,10 +79,15 @@ operation = ''
 
 def operator(operator):
     # Handles pressing an operator button
-    global operation, var1
-    var1 = float(entry_var.get())
-    entry_var.set('0')
-    operation = operator
+    if operator == '-' and float(entry_var.get()) == 0:
+        entry_var.set('-0')
+        
+    else:
+        global operation, var1
+        var1 = float(entry_var.get())
+        entry_var.set('0')
+        operation = operator
+        state_var.set(f"{var1}{operation}{var2}")
 
 
 def calculate(var1, operation):
@@ -89,6 +97,8 @@ def calculate(var1, operation):
     try:
         answer = eval(f"{var1}{operation}{var2}")
         entry_var.set(round(answer, 3))
+        state_var.set(f"{var1}{operation}{var2}")
+
     except:
         pass
 
@@ -205,6 +215,16 @@ point_btn.grid(row=4, column=2, padx=5, sticky='nsew', pady=5)
 # column 5
 clear_button.grid(row=0, column=4, padx=7.5, sticky='nsew', pady=5)
 all_clear_button.grid(row=1, column=4, padx=7.5, sticky='nsew', pady=5, rowspan=4)
+
+frame3 = ttk.Frame(window)
+
+
+state_var = tk.StringVar()
+buttom_label = ttk.Label(frame3, text=f"{var1}{operation}{var2}", textvariable=state_var, foreground='white')
+buttom_label.pack(expand=True, fill='x')
+
+frame3.pack(side='bottom', expand=True, fill='x', ipady=5)
+
 
 
 # Security event
