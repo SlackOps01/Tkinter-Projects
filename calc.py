@@ -1,9 +1,10 @@
-# run export LC_ALL=C to avoid locale errors
+# run export LC_ALL=C to avoid locale errors on linux
 import tkinter as tk
 import ttkbootstrap as ttk
 import pyperclip
+import webbrowser
 
-
+url = 'https://github.com/SlackOps01'
 # Setup
 window = ttk.Window(themename='vapor')
 window.title('app')
@@ -12,73 +13,106 @@ screen_height = window.winfo_screenheight()
 window.geometry('250x350+1366+0')
 window.resizable(False, False)
 
+operators = ['+', '*', "/", "%", '-']
 # functions
+
 def updateLabel(val):
-    if entry_var.get() == '0':
-        entry_var.set(val)
+    if val in operators:
+        operator(val)
+        pass
+    elif val == "=":
+        calculate(var1, operation)
+        pass
+    elif val == '\r':
+        calculate(var1, operation)
+        pass
+    try:
+        val = int(val)
+        if entry_var.get() == '0':
+            entry_var.set(val)
+        else:
+            string = f"{entry_var.get()}{val}"
+            entry_var.set(string)
+    except:
+        pass
+
+
+def backSpace():
+    # Check to make sure there's no non 0 entry
+    if len(entry_var.get()) == 1:
+        entry_var.set('0')
+        pass
     else:
-        string = f"{entry_var.get()}{val}"
-        print(string)
-        entry_var.set(string)
+        entry_var.set((entry_var.get()[:-1]))
+
 
 def insertDecimal():
     entry_var.set(f"{entry_var.get()}.")
     
+
 def clearEntry():
     entry_var.set(0)
 
+
 def clearAll():
+    # Clearing var1, and var2
     global var1, var2
     entry_var.set(0)
     var1 = 0
     var2 = 0
-    
+
+
 var1=0
 var2 = 0
 
+
 operation = ''
+
+
 def operator(operator):
+    # Handles pressing an operator button
     global operation, var1
     var1 = float(entry_var.get())
     entry_var.set('0')
     operation = operator
-    print(f"var1: {var1}, operation: {operation}")
 
 
 def calculate(var1, operation):
     var2 = int(entry_var.get())
-    print(f"VAR 1:{var1}, VAR 2:{var2}")
+
+    # do nothing if no operation is set
     try:
         answer = eval(f"{var1}{operation}{var2}")
         entry_var.set(round(answer, 3))
     except:
-        print('passed')
         pass
+
 
 def pasteValue():
     global entry_var
+
+    # preventing non numeric entries 
     try:
         entry_var.set(float(pyperclip.paste()))
     except:
         pass
 
-evaluate = False
-# widgets
 
+# widgets
 
 # main menu 
 main_menu = ttk.Menu(window)
 
 file_menu = ttk.Menu(main_menu)
-file_menu.add_command(label='quit', command= lambda: window.quit())
+file_menu.add_command(label='Quit', command= lambda: window.quit())
 
 edit_menu = ttk.Menu(main_menu)
 edit_menu.add_command(label='Copy', command= lambda: pyperclip.copy(entry_var.get()))
 edit_menu.add_command(label='Paste', command= pasteValue)
 
 help_menu = ttk.Menu(main_menu)
-help_menu.add_command(label='Support', command=lambda: print("Support me"))
-help_menu.add_command(label="See more projects", command= lambda: print("See more projects"))
+help_menu.add_command(label='Support', command=lambda: webbrowser.open(url))
+help_menu.add_command(label="See more projects", command= lambda: webbrowser.open(url))
 
 
 
@@ -90,7 +124,6 @@ window['menu'] = main_menu
 # frames
 frame1 = ttk.Frame(window, border=5, relief='solid', height=25)
 frame2 = ttk.Frame(window)
-
 
 
 # variables
@@ -105,6 +138,8 @@ for i in range(5):
     frame2.rowconfigure(i, weight=1)
     frame2.columnconfigure(i, weight=1)
 
+
+# Creating all buttons
 percent_btn = ttk.Button(frame2, text='%', bootstyle="outline", command= lambda: operator('%'))
 divide_btn = ttk.Button(frame2, text='/', bootstyle="outline", command= lambda: operator('/'))
 multiply_btn = ttk.Button(frame2, text='X', bootstyle="outline", command= lambda: operator('*'))
@@ -141,13 +176,13 @@ divide_btn.grid(row=0, column=1, sticky='nsew', padx=5, pady=5)
 multiply_btn.grid(row=0, column=2, sticky='nsew', padx=5, pady=5)
 minus_btn.grid(row=0, column=3, sticky='nsew', padx=5, pady=5)
 
-# row 1
+# row 1, plus is in both row 1 & 2
 seven_btn.grid(row=1, column=0, padx=5, sticky='nsew', pady=5)
 eight_btn.grid(row=1, column=1, padx=5, sticky='nsew', pady=5)
 nine_btn.grid(row=1, column=2, padx=5, sticky='nsew', pady=5)
 plus_btn.grid(row=1, column=3, padx=5, sticky='nsew', rowspan=2, pady=5)
 
-# row 2
+# row 2, equals in both row 3 and 4
 four_btn.grid(row=2, column=0, padx=5, sticky='nsew', pady=5)
 five_btn.grid(row=2, column=1, padx=5, sticky='nsew', pady=5)
 six_btn.grid(row=2, column=2, padx=5, sticky='nsew', pady=5)
@@ -169,5 +204,7 @@ all_clear_button.grid(row=1, column=4, padx=7.5, sticky='nsew', pady=5, rowspan=
 
 # Security event
 window.bind('<Escape>', lambda event: window.quit())
+window.bind('<KeyPress>', lambda event: updateLabel(event.char))
+window.bind('<BackSpace>', lambda event: backSpace())
 # Run
 window.mainloop()
